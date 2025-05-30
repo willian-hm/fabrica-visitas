@@ -1,0 +1,40 @@
+<form method="POST" action="/formulario" onsubmit="return capturarFoto();" enctype="application/x-www-form-urlencoded">
+  <label>Nome:</label><br>
+  <input type="text" name="nome" required><br>
+
+  <label>Email:</label><br>
+  <input type="email" name="email" required><br>
+
+  <label>Empresa:</label><br>
+  <input type="text" name="empresa"><br>
+
+  <label>Motivo da Visita:</label><br>
+  <textarea name="motivo" required></textarea><br>
+
+  <label>Foto:</label><br>
+  <video id="video" autoplay></video><br>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <input type="hidden" name="foto_base64" id="foto_base64">
+
+  <button type="submit">Gerar Crachá</button>
+</form>
+
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const fotoBase64 = document.getElementById('foto_base64');
+
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+      video.srcObject = stream;
+    });
+
+  function capturarFoto() {
+    const context = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    fotoBase64.value = canvas.toDataURL('image/jpeg');
+    return true; // permite o submit
+  }
+</script>
